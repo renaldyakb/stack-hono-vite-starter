@@ -227,10 +227,4 @@ The Vite frontend can be deployed to:
 4. Run tests
 5. Submit a pull request
 
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
----
-
 Happy coding! 🎉
