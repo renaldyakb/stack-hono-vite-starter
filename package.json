@@ -1,0 +1,12 @@
+{
+  "name": "stack-hono-vite",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"cd apps/backend && pnpm dev\" \"cd apps/frontend && pnpm dev\"",
+    "dev:backend": "cd apps/backend && pnpm dev",
+    "dev:frontend": "cd apps/frontend && pnpm dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
