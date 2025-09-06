@@ -6,6 +6,6 @@ import {
 
 export const greetings = createTRPCRouter({
   hello: protectedProcedure.query(({ ctx }) => {
-    return { mesage: "hello from server" };
+    return { kata: "hello from server" };
   }),
 });

@@ -5,6 +5,7 @@ import { logger } from "hono/logger";
 import { auth } from "./lib/auth";
 import { db } from "./lib/db";
 import { appRouter } from "./routes";
+import { createContext } from "./lib/trpc/trpc_context";
 
 const app = new Hono();
 
@@ -26,13 +27,7 @@ app.use("/api/trpc/*", async (c) => {
     endpoint: "/api/trpc",
     req: c.req.raw,
     router: appRouter,
-    createContext: async () => {
-      return {
-        db,
-        user: null,
-        session: null,
-      };
-    },
+    createContext: (opts) => createContext(opts),
   });
 });
 

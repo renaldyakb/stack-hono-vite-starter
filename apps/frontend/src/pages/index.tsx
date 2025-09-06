@@ -41,13 +41,15 @@ function Home() {
             {session ? "Welcome" : "Not Authenticated"}
           </CardTitle>
           <p>{error?.message}</p>
-          <p>{data?.mesage}</p>
+          <p>{data?.kata}</p>
+
           <CardDescription>
             {session
               ? `Hello, ${session.user.email}`
               : "Please sign in to continue"}
           </CardDescription>
         </CardHeader>
+
         <CardContent className="gap-2 space-x-2">
           {!isPending && session ? (
             <Button onClick={handleSignOut}>Signout</Button>
