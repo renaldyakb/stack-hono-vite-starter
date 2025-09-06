@@ -3,9 +3,8 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { auth } from "./lib/auth";
-import { db } from "./lib/db";
-import { appRouter } from "./routes";
 import { createContext } from "./lib/trpc/trpc_context";
+import { appRouter } from "./routes";
 
 const app = new Hono();
 
@@ -32,8 +31,21 @@ app.use("/api/trpc/*", async (c) => {
 });
 
 // Health check
-app.get("/health", (c) => {
-  return c.json({ status: "ok", timestamp: new Date().toISOString() });
+app.get("/api/health", (c) => {
+  return c.json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV ?? "development",
+  });
+});
+
+// Default route
+app.get("/", (c) => {
+  return c.json({
+    message: "Hono Backend API",
+    version: "1.0.0",
+    docs: "/api/health",
+  });
 });
 
 export default app;
