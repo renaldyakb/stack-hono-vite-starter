@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { authClient } from "@/lib/auth-client";
 import { trpc } from "@/lib/trpc";
-
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -17,21 +17,26 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const { data: session, isPending } = authClient.useSession();
+  const queryClient = useQueryClient();
+
+  const { data, isLoading: isLoadingGreeting } = trpc.greetings.hello.useQuery(
+    undefined,
+    { enabled: !!session }
+  );
 
   const handleSignOut = async () => {
     await authClient.signOut({
       fetchOptions: {
-        onSuccess: () => {
-          alert("Berhasil keluar");
-        },
-        onError: (ctx) => {
-          alert(ctx.error.message);
-        },
+        onSuccess: () =>
+          queryClient.invalidateQueries({ queryKey: [["greetings"]] }),
+        onError: (ctx) => alert(ctx.error.message),
       },
     });
   };
 
-  const { data, error } = trpc.greetings.hello.useQuery();
+  const showLoading = isPending || (session && isLoadingGreeting); // <- tambahan
+  const showGreeting = session && !isLoadingGreeting;
+  const showLoginPrompt = !session && !isPending;
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -40,8 +45,10 @@ function Home() {
           <CardTitle className="text-xl">
             {session ? "Welcome" : "Not Authenticated"}
           </CardTitle>
-          <p>{error?.message}</p>
-          <p>{data?.kata}</p>
+
+          {showLoading && <p>Loading…</p>}
+          {showGreeting && <p>{data?.message ?? "-"}</p>}
+          {showLoginPrompt && <p>You must login to see the resource</p>}
 
           <CardDescription>
             {session
